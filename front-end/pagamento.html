@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Pagamento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Finalizar Pagamento</h2>
+    <p>Pedido número: <b id="orderId"></b></p>
+
+    <button style="background: green; color: white;" onclick="confirmar('PAGO')">Paguei (Simular Sucesso)</button>
+    <button style="background: red; color: white;" onclick="confirmar('CANCELADO')">Não Paguei (Simular Falha)</button>
+
+    <script>
+        const pedidoId = localStorage.getItem('ultimoPedidoId');
+        document.getElementById('orderId').innerText = pedidoId;
+
+        async function confirmar(status) {
+            // Aqui chamamos a rota de PATCH que criamos no controller de pedidos
+            try {
+                const response = await fetch(`http://localhost:3002/pedido/${pedidoId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ novoStatus: status })
+                });
+
+                if (response.ok) {
+                    alert("Status do pedido atualizado para: " + status);
+                    window.location.href = 'login.html'; // Volta ao início
+                }
+            } catch (err) {
+                alert("Erro ao processar status");
+            }
+        }
+    </script>
+</body>
+</html>

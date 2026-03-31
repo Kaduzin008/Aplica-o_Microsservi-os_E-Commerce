@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - eCommerce</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <p>Entre com suas credenciais</p>
+
+        <input type="email" id="email" placeholder="Seu e-mail">
+        <input type="password" id="senha" placeholder="Sua senha">
+
+        <button class="btn-primary" onclick="realizarLogin()">Entrar</button>
+        <p id="msg-erro" style="color: red; display: none; margin-top: 10px;">E-mail ou senha incorretos!</p>
+    </div>
+
+    <script>
+        async function realizarLogin() {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const msgErro = document.getElementById('msg-erro');
+
+            try {
+                // Faz o POST para o serviço de usuários
+                const response = await fetch('http://localhost:3001/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Salva o ID que o servidor retornou após validar a senha
+                    localStorage.setItem('usuarioId', data.id_usuario);
+                    alert("Bem-vindo, " + data.nome);
+                    window.location.href = 'pedido.html';
+                } else {
+                    msgErro.innerText = data.error || "Erro ao logar";
+                    msgErro.style.display = 'block';
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor de usuários");
+            }
+        }
+    </script>
+</body>
+</html>
