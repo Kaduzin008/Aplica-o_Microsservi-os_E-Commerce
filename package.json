@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "install-all": "concurrently \"cd usuario && npm install\" \"cd pedidos && npm install\" \"cd catalogo && npm install\" \"cd estoque && npm install\" \"cd pagamento && npm install\"",
-    "start-all": "concurrently -n \"USU,PED,CAT,EST,PAG\" -c \"magenta,blue,green,yellow,cyan\" \"cd usuario && node app.js\" \"cd pedidos && node app.js\" \"cd catalogo && node app.js\" \"cd estoque && node app.js\" \"cd pagamento && node app.js\"",
+    "start-all": "concurrently -n \"USU,PED,CAT,EST,PAG,FRONT\" -c \"magenta,blue,green,yellow,cyan,white\" \"cd usuario && node app.js\" \"cd pedidos && node app.js\" \"cd catalogo && node app.js\" \"cd estoque && node app.js\" \"cd pagamento && node app.js\" \"cd frontend && npm run dev\"",
+    "install-cors": "concurrently \"cd usuario && npm install cors\" \"cd pedidos && npm install cors\" \"cd catalogo && npm install cors\" \"cd estoque && npm install cors\" \"cd pagamento && npm install cors\"",
     "stop-all": "taskkill /f /im node.exe"
   },
   "devDependencies": {

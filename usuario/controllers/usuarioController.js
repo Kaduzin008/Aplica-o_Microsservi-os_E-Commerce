@@ -33,3 +33,23 @@ export const getUsuarioById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+//Cria um login
+export const login = async (req, res) => {
+    const { email, senha } = req.body;
+    try {
+        const usuario = await Usuario.findOne({ where: { email: email } });
+
+        if (!usuario || usuario.senha !== senha) {
+            return res.status(401).json({ error: "E-mail ou senha inválidos" });
+        }
+
+        // Se deu tudo certo, retorna o ID e o Nome
+        res.json({ 
+            id_usuario: usuario.id_usuario, 
+            nome: usuario.nome 
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

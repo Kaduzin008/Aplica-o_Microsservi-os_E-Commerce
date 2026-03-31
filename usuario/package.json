@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Microsserviço de Usuario",
   "main": "app.js",
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mysql2": "^3.6.1",

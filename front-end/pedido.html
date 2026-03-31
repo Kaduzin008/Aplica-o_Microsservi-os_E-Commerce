@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Fazer Pedido</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Fazer Pedido</h2>
+    <p>Logado como ID: <span id="displayId"></span></p>
+
+    <input type="text" id="produto" placeholder="Nome do Produto (Ex: Teclado Mecânico)">
+    <input type="number" id="qtd" placeholder="Quantidade">
+    <button onclick="gerarPedido()">Finalizar Pedido</button>
+
+    <script>
+        document.getElementById('displayId').innerText = localStorage.getItem('usuarioId');
+
+        async function gerarPedido() {
+            const dados = {
+                id_usuario: parseInt(localStorage.getItem('usuarioId')),
+                produto: document.getElementById('produto').value,
+                quantidade: parseInt(document.getElementById('qtd').value)
+            };
+
+            try {
+                const response = await fetch('http://localhost:3002/pedido', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok) {
+                    // Salva o ID do pedido gerado para pagar na próxima tela
+                    localStorage.setItem('ultimoPedidoId', resultado.pedido.id_pedido);
+                    window.location.href = 'pagamento.html';
+                } else {
+                    alert("Erro: " + resultado.error);
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor de pedidos");
+            }
+        }
+    </script>
+</body>
+</html>
