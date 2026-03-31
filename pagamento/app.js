@@ -17,4 +17,4 @@ db.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`Serviço de Pagamentos rodando na porta ${PORT}`);
     });
-}).catch(err => console.log("Erro no banco de Pedidos:", err));
+}).catch(err => console.log("Erro no banco de Pagamentos:", err));

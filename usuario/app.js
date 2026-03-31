@@ -15,4 +15,4 @@ db.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`Serviço de Usuário rodando na porta ${PORT}`);
     });
-}).catch(err => console.log("Erro ao conectar no MySQL:", err));
+}).catch(err => console.log("Erro ao conectar ao banco de Usuarios:", err));
