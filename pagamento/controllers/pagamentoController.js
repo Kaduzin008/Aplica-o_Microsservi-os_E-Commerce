@@ -40,3 +40,22 @@ export const getPagamentoById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Rota Update para status do pagamento sincronizando com front-end
+export const updateStatusPedido = async (req, res) => {
+    const { id } = req.params;
+    const { novoStatus } = req.body; // "PAGO" ou "CANCELADO"
+
+    try {
+        const pedido = await Pedido.findByPk(id);
+        if (!pedido) {
+            return res.status(404).json({ error: "Pedido não encontrado" });
+        }
+        pedido.status = novoStatus; // Supondo que você tenha essa coluna no Model
+        await pedido.save();
+
+        res.status(200).json({ message: `Pedido atualizado para ${novoStatus}` });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

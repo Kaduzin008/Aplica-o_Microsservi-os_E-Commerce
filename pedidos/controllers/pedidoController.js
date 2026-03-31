@@ -22,7 +22,7 @@ export const createPedido = async (req, res) => {
         }
 
         //3. Consultando o pagante
-        const resUsuario = await fetch(`http://localhost:3001/usuario/${id_usuario}`);
+        const resUsuario = await fetch(`http://localhost:3001/usuarios/${id_usuario}`);
         if(!resUsuario.ok){//Se o usuario nao for cadastrado, retorna mensagem de erro
             return res.status(404).json({ error: "Usuário não cadastrado!" });
         }
