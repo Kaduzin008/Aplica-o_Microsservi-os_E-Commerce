@@ -80,4 +80,49 @@ export const getPedidoById = async(req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
+
+// Busca o pedido por ID do usuário, e ordena do mais recente para o mais antigo
+export const getPedidosByUsuario = async (req, res) => {
+    const { id_usuario } = req.params;
+    try {
+        const pedidos = await Pedido.findAll({ 
+            where: { id_usuario: id_usuario },
+            order: [['createdAt', 'DESC']] // Os mais recentes primeiro
+        });
+        res.status(200).json(pedidos);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Atualiza o Status do pedido
+export const updateStatusPedido = async (req, res) => {
+    const { id } = req.params;
+    const { novoStatus } = req.body;
+
+    try {
+        const pedido = await Pedido.findByPk(id);
+        if (!pedido) return res.status(404).json({ error: "Pedido não encontrado" });
+
+        pedido.status = novoStatus;
+        await pedido.save();
+
+        // SE O STATUS FOR PAGO, DISPARA A BAIXA NO ESTOQUE
+        if (novoStatus === 'PAGO') {
+            await fetch('http://localhost:3004/estoque/baixar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    produto: pedido.produto, 
+                    quantidade: pedido.qtd_produto 
+                })
+            });
+        }
+
+        res.status(200).json({ message: "Pedido atualizado e estoque comunicado!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+

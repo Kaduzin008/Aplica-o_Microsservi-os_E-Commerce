@@ -56,3 +56,23 @@ export const getEstoqueByNome = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Reduz do estoque apos feito o pedido
+export const baixarEstoque = async (req, res) => {
+    try {
+        const { produto, quantidade } = req.body;
+
+        const item = await Estoque.findOne({ where: { produto: produto } });
+
+        if (!item) {
+            return res.status(404).json({ error: "Produto não encontrado" });
+        }
+        item.qtd_estoque -= quantidade; // Subtrai a quantidade vendida
+        await item.save();
+
+        res.status(200).json({ message: "Estoque atualizado!", novoTotal: item.qtd_estoque });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+
+};

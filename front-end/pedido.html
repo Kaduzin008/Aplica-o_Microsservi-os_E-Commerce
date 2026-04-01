@@ -1,47 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Fazer Pedido</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Fazer Pedido</h2>
-    <p>Logado como ID: <span id="displayId"></span></p>
+    <div class="container">
+        <h2>Fazer Pedido</h2>
+        <p>Logado como ID: <span id="displayId"></span></p>
 
-    <input type="text" id="produto" placeholder="Nome do Produto (Ex: Teclado Mecânico)">
-    <input type="number" id="qtd" placeholder="Quantidade">
-    <button onclick="gerarPedido()">Finalizar Pedido</button>
+        <label>Escolha o Produto:</label>
+        <select id="produtoSelect">
+            <!-- As opções virão do banco de dados -->
+        </select>
+
+        <label>Quantidade:</label>
+        <input type="number" id="qtd" value="1" min="1">
+        
+        <button class="btn-primary" onclick="gerarPedido()">Verificar e Comprar</button>
+    </div>
 
     <script>
         document.getElementById('displayId').innerText = localStorage.getItem('usuarioId');
 
+        // Carregar produtos do catálogo ao abrir a página
+        async function carregarCatalogo() {
+            try {
+                const res = await fetch('http://localhost:3003/catalogo'); // Rota de listagem
+                const produtos = await res.json();
+                const select = document.getElementById('produtoSelect');
+                
+                produtos.forEach(p => {
+                    let option = document.createElement('option');
+                    option.value = p.nome; // ou p.id_produto
+                    option.text = `${p.nome} - R$ ${p.preco}`;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error("Erro ao carregar catálogo");
+            }
+        }
+
         async function gerarPedido() {
             const dados = {
                 id_usuario: parseInt(localStorage.getItem('usuarioId')),
-                produto: document.getElementById('produto').value,
+                produto: document.getElementById('produtoSelect').value,
                 quantidade: parseInt(document.getElementById('qtd').value)
             };
 
-            try {
-                const response = await fetch('http://localhost:3002/pedido', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dados)
-                });
+            const response = await fetch('http://localhost:3002/pedido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
 
-                const resultado = await response.json();
+            const resultado = await response.json();
 
-                if (response.ok) {
-                    // Salva o ID do pedido gerado para pagar na próxima tela
-                    localStorage.setItem('ultimoPedidoId', resultado.pedido.id_pedido);
-                    window.location.href = 'pagamento.html';
-                } else {
-                    alert("Erro: " + resultado.error);
-                }
-            } catch (err) {
-                alert("Erro de conexão com o servidor de pedidos");
+            if (response.ok) {
+                localStorage.setItem('ultimoPedidoId', resultado.pedido.id_pedido);
+                window.location.href = 'pagamento.html';
+            } else {
+                alert("Erro: " + resultado.error); // Aqui já mostrará se não tem estoque ou produto
             }
         }
+
+        carregarCatalogo();
     </script>
 </body>
 </html>
