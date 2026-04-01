@@ -30,9 +30,11 @@ export const createPedido = async (req, res) => {
         const nomePagante = dadosUsuario.nome;//Retorna o nome do pagante 
 
         //4. Criar o pedido no banco de dados
-        const novoPedido = await Pedido.create({//Cria o pedido com o nome do produto e sua quantidade
+        const novoPedido = await Pedido.create({
             produto: produto,
-            qtd_produto: quantidade
+            qtd_produto: quantidade,
+            id_usuario: id_usuario, 
+            status: 'PENDENTE'      
         })
 
         //5. Criando o pagamento

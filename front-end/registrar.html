@@ -1,18 +1,3 @@
-Excelente! Você já tem uma base sólida. Vamos organizar as respostas para as suas dúvidas e evoluir o código.
-
-1. O Login vai funcionar no Live Preview?
-Não. O Live Preview do VS Code apenas renderiza o HTML/CSS. Como o seu sistema é baseado em Microsserviços, o login só funcionará se:
-
-Seu banco de dados MySQL estiver ligado.
-
-O serviço de Usuário (porta 3001) estiver rodando.
-
-Você abrir o arquivo pelo navegador (ou pelo Live Server) e os microsserviços estiverem ativos.
-
-2. Nova Página: Registrar Usuário (registrar.html)
-Esta página enviará um POST para http://localhost:3001/usuarios.
-
-HTML
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -36,7 +21,7 @@ HTML
             const email = document.getElementById('email').value;
             const senha = document.getElementById('senha').value;
 
-            const res = await fetch('http://localhost:3001/usuarios', {
+            const res = await fetch('http://localhost:3001/usuario', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, email, senha })

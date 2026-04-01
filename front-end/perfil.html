@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .pedido-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            text-align: left;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 600px;">
+        <h2>Minhas Compras</h2>
+        <p>Histórico do Cliente ID: <span id="displayId"></span></p>
+        
+        <!-- Aqui vão aparecer os pedidos -->
+        <div id="lista-pedidos">Carregando pedidos...</div>
+        
+        <button class="btn-primary" onclick="window.location.href='pedido.html'" style="width: 100%; margin-top: 20px;">Fazer Nova Compra</button>
+        <button class="btn-danger" onclick="sair()" style="width: 100%; margin-top: 10px; background-color: #e74c3c;">Sair da Conta</button>
+    </div>
+
+    <script>
+        const userId = localStorage.getItem('usuarioId');
+        document.getElementById('displayId').innerText = userId;
+        
+        async function carregarHistorico() {
+            try {
+                // Chama a rota de histórico no microsserviço de Pedidos
+                const res = await fetch(`http://localhost:3002/pedidos/usuario/${userId}`);
+                const pedidos = await res.json();
+                const lista = document.getElementById('lista-pedidos');
+                lista.innerHTML = ''; // Limpa o "Carregando..."
+
+                if(pedidos.length === 0) {
+                    lista.innerHTML = '<p>Você ainda não fez nenhuma compra.</p>';
+                    return;
+                }
+
+                // Cria um "cartão" para cada pedido feito
+                pedidos.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'pedido-card';
+                    div.innerHTML = `
+                        <p><strong>Pedido #${p.id_pedido}</strong></p>
+                        <p>Produto: ${p.produto}</p>
+                        <p>Quantidade: ${p.qtd_produto}</p>
+                        <p>Status: <strong>${p.status}</strong></p>
+                    `;
+                    lista.appendChild(div);
+                });
+            } catch (err) {
+                document.getElementById('lista-pedidos').innerHTML = '<p style="color:red;">Erro ao carregar o histórico.</p>';
+            }
+        }
+
+        function sair() {
+            localStorage.clear(); // Limpa o ID do usuário
+            window.location.href = 'login.html'; // Volta pro login
+        }
+
+        // Roda a função assim que a página abre
+        carregarHistorico();
+    </script>
+</body>
+</html>

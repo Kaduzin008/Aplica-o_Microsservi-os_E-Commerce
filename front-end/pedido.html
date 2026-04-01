@@ -7,38 +7,51 @@
 </head>
 <body>
     <div class="container">
+        <button onclick="window.location.href='perfil.html'" style="margin-bottom: 20px;">Ver Meu Perfil</button>
         <h2>Fazer Pedido</h2>
         <p>Logado como ID: <span id="displayId"></span></p>
 
-        <label>Escolha o Produto:</label>
-        <select id="produtoSelect">
-            <!-- As opções virão do banco de dados -->
-        </select>
+        <!-- LINHA 1: Produto -->
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Escolha o Produto:</label>
+            <select id="produtoSelect" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                <!-- As opções virão do banco de dados -->
+            </select>
+        </div>
 
-        <label>Quantidade:</label>
-        <input type="number" id="qtd" value="1" min="1">
+        <!-- LINHA 2: Quantidade -->
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Quantidade:</label>
+            <input type="number" id="qtd" value="1" min="1" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+        </div>
         
-        <button class="btn-primary" onclick="gerarPedido()">Verificar e Comprar</button>
+        <button class="btn-primary" onclick="gerarPedido()" style="width: 100%;">Verificar e Comprar</button>
     </div>
 
     <script>
         document.getElementById('displayId').innerText = localStorage.getItem('usuarioId');
 
-        // Carregar produtos do catálogo ao abrir a página
         async function carregarCatalogo() {
             try {
-                const res = await fetch('http://localhost:3003/catalogo'); // Rota de listagem
+                // Coloque aqui a URL certa que você descobriu no passo anterior
+                const res = await fetch('http://localhost:3003/catalogos'); 
                 const produtos = await res.json();
                 const select = document.getElementById('produtoSelect');
+                console.log("MEUS PRODUTOS:", produtos);
                 
                 produtos.forEach(p => {
                     let option = document.createElement('option');
-                    option.value = p.nome; // ou p.id_produto
-                    option.text = `${p.nome} - R$ ${p.preco}`;
+                    
+                    // CORREÇÃO DO UNDEFINED:
+                    // Tenta achar 'produto', se não achar tenta 'nome', se não achar tenta 'descricao'
+                    const nomeDoProduto = p.produto_catalogo;
+                    
+                    option.value = nomeDoProduto; 
+                    option.text = `${nomeDoProduto} - R$ ${p.preco}`;
                     select.appendChild(option);
                 });
             } catch (err) {
-                console.error("Erro ao carregar catálogo");
+                console.error("Erro ao carregar catálogo", err);
             }
         }
 
@@ -61,7 +74,7 @@
                 localStorage.setItem('ultimoPedidoId', resultado.pedido.id_pedido);
                 window.location.href = 'pagamento.html';
             } else {
-                alert("Erro: " + resultado.error); // Aqui já mostrará se não tem estoque ou produto
+                alert("Erro: " + resultado.error);
             }
         }
 

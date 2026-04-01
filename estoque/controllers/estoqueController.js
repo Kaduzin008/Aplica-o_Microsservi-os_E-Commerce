@@ -62,10 +62,12 @@ export const baixarEstoque = async (req, res) => {
     try {
         const { produto, quantidade } = req.body;
 
-        const item = await Estoque.findOne({ where: { produto: produto } });
-
+        const item = await Estoque.findOne({ where: { produto_estoque: produto } });
         if (!item) {
-            return res.status(404).json({ error: "Produto não encontrado" });
+            return res.status(404).json({ error: "Produto não encontrado no estoque" });
+        }
+        if (item.qtd_estoque < quantidade) {// Evita que o estoque fique negativo
+            return res.status(400).json({ error: "Estoque insuficiente!" });
         }
         item.qtd_estoque -= quantidade; // Subtrai a quantidade vendida
         await item.save();
@@ -74,5 +76,4 @@ export const baixarEstoque = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
 };

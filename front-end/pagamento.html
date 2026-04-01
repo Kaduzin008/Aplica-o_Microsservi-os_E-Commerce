@@ -5,12 +5,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Finalizar Pagamento</h2>
-    <p>Pedido número: <b id="orderId"></b></p>
+    <div class="container">
+        <h2>Finalizar Pagamento</h2>
+        <p>Pedido número: <b id="orderId"></b></p>
 
-    <button style="background: green; color: white;" onclick="confirmar('PAGO')">Paguei (Simular Sucesso)</button>
-    <button style="background: red; color: white;" onclick="confirmar('CANCELADO')">Não Paguei (Simular Falha)</button>
-
+        <button class="btn-success" onclick="confirmar('PAGO')">Paguei (Simular Sucesso)</button>
+        <button class="btn-danger" onclick="confirmar('CANCELADO')">Não Paguei (Simular Falha)</button>
+    </div>
     <script>
         const pedidoId = localStorage.getItem('ultimoPedidoId');
         document.getElementById('orderId').innerText = pedidoId;
@@ -26,8 +27,8 @@
 
                 if (response.ok) {
                     alert("Status do pedido atualizado para: " + status);
-                    window.location.href = 'login.html'; // Volta ao início
-                }
+                    window.location.href = 'pedido.html'; // Volta para a loja 
+            }   
             } catch (err) {
                 alert("Erro ao processar status");
             }
