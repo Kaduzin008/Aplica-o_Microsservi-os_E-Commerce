@@ -14,12 +14,12 @@ O projeto roda simultaneamente em 5 portas locais, comunicando-se via HTTP:
 1. **Usuários (Porta 3001):** Gerencia cadastro e autenticação de clientes.
 2. **Pedidos (Porta 3002):** Orquestra a compra, validando estoque, catálogo e chamando o pagamento.
 3. **Catálogo (Porta 3003):** Vitrine de produtos e preços.
-4. **Estoque (Porta 3004):** Gerencia a quantidade disponível e barra compras sem saldo.
+4. **Estoque (Porta 3004):** Gerencia a quantidade disponível e barra compras sem estoque.
 5. **Pagamento (Porta 3005):** Simula o gateway de pagamento (Aprovado/Cancelado).
 
 ---
 
-## 🚀 Como Rodar o Projeto
+## Como Rodar o Projeto
 
 ### 1. Clonar o Repositório
 Abra o seu terminal e clone o projeto para a sua máquina:
