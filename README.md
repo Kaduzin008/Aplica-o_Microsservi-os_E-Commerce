@@ -31,7 +31,7 @@ git clone https://github.com/Kaduzin008/Aplica-o_Microsservi-os_E-Commerce.git
 Abra seu terminal MySQL ou Workbench e execute os seguintes comandos para criar os bancos isolados:
 ```sql
 CREATE DATABASE db_usuario;
-CREATE DATABASE db_pedido;
+CREATE DATABASE db_pedidos;
 CREATE DATABASE db_catalogo;
 CREATE DATABASE db_estoque;
 CREATE DATABASE db_pagamento;
